@@ -1,0 +1,4 @@
+FROM nginx:latest
+
+ADD ./deploy/vhost.conf /etc/nginx/conf.d/default.conf
+WORKDIR /var/www

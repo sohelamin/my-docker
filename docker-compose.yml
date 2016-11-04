@@ -1,40 +1,45 @@
-nginx:
-    image: nginx:latest
-    ports:
-        - "80:80"
-    links:
-        - php
-    volumes:
-        - ./sites:/var/www/docker.dev
-        - ./nginx/docker.dev.conf:/etc/nginx/conf.d/default.conf
-
-        - ./logs/nginx-error.log:/var/log/nginx/error.log
-        - ./logs/nginx-access.log:/var/log/nginx/access.log
-php:
-    image: php:fpm
-    ports:
-        - "9000:9000"
-    links:
-        - mysql
-    volumes:
-        - ./sites:/var/www/docker.dev
-        - ./php/php.ini:/usr/local/etc/php/php.ini
-mysql:
-    image: mariadb
-    environment:
-        MYSQL_ROOT_PASSWORD: 1234
-    volumes:
-     - data:/var/lib/mysql
-phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    links:
-        - mysql
-    ports:
-        - 8183:80
-    environment:
-        MYSQL_USERNAME: root
-        MYSQL_ROOT_PASSWORD: 1234
-        PMA_ARBITRARY: 1
-redis:
-    image: redis:alpine
+version: '2'
+services:
+    nginx:
+        build:
+            context: ./
+            dockerfile: docker/nginx.docker
+        volumes:
+            - ./sites:/var/www
+        ports:
+            - "80:80"
+        links:
+            - app
+    app:
+        build:
+            context: ./
+            dockerfile: docker/app.docker
+        volumes:
+            - ./sites:/var/www
+        links:
+            - mysql
+            - redis
+    mysql:
+        image: mariadb
+        environment:
+            - "MYSQL_ROOT_PASSWORD=1234"
+            - "MYSQL_DATABASE=docker_app"
+        volumes:
+            - ./data:/var/lib/mysql
+        ports:
+            - "33061:3306"
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        links:
+            - mysql
+        ports:
+            - 8183:80
+        environment:
+            MYSQL_USERNAME: root
+            MYSQL_ROOT_PASSWORD: 1234
+            PMA_ARBITRARY: 1
+    redis:
+        image: redis:alpine
+        ports:
+            - "63791:6379"

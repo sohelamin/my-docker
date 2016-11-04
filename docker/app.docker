@@ -1,0 +1,9 @@
+FROM php:fpm
+
+RUN apt-get update && apt-get install -y libmcrypt-dev mysql-client \
+    && docker-php-ext-install mysqli mcrypt pdo_mysql \
+    && apt-get install -y libc-client-dev libkrb5-dev && rm -r /var/lib/apt/lists/* \
+    && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-install imap
+
+WORKDIR /var/www
