@@ -9,4 +9,4 @@
 ## Usage
     docker-compose up -d
     docker-compose down
-    docker exec -it mydocker_php_1 bash
+    docker exec -it mydocker_app_1 bash
