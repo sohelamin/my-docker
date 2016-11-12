@@ -40,6 +40,6 @@ services:
             MYSQL_ROOT_PASSWORD: 1234
             PMA_ARBITRARY: 1
     redis:
-        image: redis:alpine
+        image: redis
         ports:
             - "63791:6379"
