@@ -1,15 +1,14 @@
 version: '2'
 services:
     nginx:
-        build:
-            context: ./
-            dockerfile: docker/nginx.docker
-        volumes:
-            - ./sites:/var/www
+        image: nginx
         ports:
             - "80:80"
         links:
             - app
+        volumes:
+            - ./sites:/var/www
+            - ./docker/vhost.conf:/etc/nginx/conf.d/default.conf
     app:
         build:
             context: ./
