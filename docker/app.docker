@@ -9,8 +9,8 @@ ENV LC_ALL en_US.UTF-8
 RUN apt-get update \
 
     && apt-get install -y curl zip unzip git \
-    && apt-get install -y php-fpm php-cli php-mcrypt php-gd php-mysql \
-       php-pgsql php-imap php-memcached php-mbstring php-xml php-curl \
+    && apt-get install -y php-fpm php-cli php-mcrypt php-gd php-mysql php-pgsql \
+       php-xdebug php-imap php-memcached php-mbstring php-xml php-curl \
     && php -r "readfile('http://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
     && mkdir /run/php \
     && apt-get clean \
@@ -19,6 +19,7 @@ RUN apt-get update \
 RUN sed -i -e "s/;\?daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.0/fpm/php-fpm.conf
 RUN sed -i s'/listen = \/run\/php\/php7.0-fpm.sock/listen = 0.0.0.0:9000/' /etc/php/7.0/fpm/pool.d/www.conf
 
+ADD ./docker/php.ini /etc/php/7.0/fpm/php.ini
 
 EXPOSE 9000
 
